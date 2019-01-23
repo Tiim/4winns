@@ -1,11 +1,3 @@
-// scrolltext demo for Adafruit RGBmatrixPanel library.
-// Demonstrates double-buffered animation on our 16x32 RGB LED matrix:
-// http://www.adafruit.com/products/420
-
-// Written by Limor Fried/Ladyada & Phil Burgess/PaintYourDragon
-// for Adafruit Industries.
-// BSD license, all text above must be included in any redistribution.
-
 #include <RGBmatrixPanel.h>
 #include "logic.h"
 #include "output.h"
@@ -23,11 +15,10 @@
 // until the first call to swapBuffers().  This is normal.
 RGBmatrixPanel matrix(A, B, C, CLK, LAT, OE, true);
 // Double-buffered mode consumes nearly all the RAM available on the
-// Arduino Uno -- only a handful of free bytes remain.  Even the
-// following string needs to go in PROGMEM:
+// Arduino Uno -- only a handful of free bytes remain.
 
 
-
+//define struct that holds all game data
 struct match4 {
     struct gamefield mainfield;
     bool isPlayer1;
@@ -38,6 +29,7 @@ struct match4 {
 
 struct match4 game;
 
+// setup led matrix and buttons
 void setup() { 
 
   game.col = 3;
@@ -55,6 +47,7 @@ void loop() {
   // Clear background
   matrix.fillScreen(0);
 
+  // handle input and calculate moves
   if (game.winner == empty) {
     signed char move = getMove();
     if (move == ENTER_PRESSED) {
@@ -74,20 +67,16 @@ void loop() {
     }
   }
 
+  //handle game over after 5sec
   if(game.winner != empty && game.winTime + 5000 < millis()) {
     // reset game after win in 5 seconds
     memset(game.mainfield.field, 0, sizeof(game.mainfield.field));
     game.winner = empty;
     game.winTime = 0;
-    game.col = 6;
+    game.col = 3;
   }
 
   render(&game, &matrix);
-
-#if !defined(__AVR__)
-  // On non-AVR boards, delay slightly so screen updates aren't too quick.
-  delay(20);
-#endif
 
   // Update display
   matrix.swapBuffers(false);
