@@ -22,6 +22,8 @@ inline int getRow(int field) {
   return field / COLS;
 }
 
+// return the field left from the given field
+// or -1 if no field available
 inline int getLeft(int field) {
   int col = getCol(field);
   if (col == 0) return -1; //Check left edge
@@ -59,7 +61,7 @@ inline int getDiagonalLeftUp(int field) {
 inline int getDiagonalRightDown(int field) {
   int col = getCol(field);
   if (col == COLS - 1) return -1; //check right edge
-  int n = field - (COLS +1);
+  int n = field - (COLS -1);
   if (n < 0) return -1; //check bottom edge
   return n;
 }
@@ -67,7 +69,7 @@ inline int getDiagonalRightDown(int field) {
 inline int getDiagonalRightUp(int field) {
   int col = getCol(field);
   if (col == COLS - 1) return -1; //check right edge
-  int n = field + (COLS -1);
+  int n = field + (COLS +1);
   if (n <= FIELDS) return -1; //check top edge
   return n;
 }
