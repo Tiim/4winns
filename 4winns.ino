@@ -10,6 +10,9 @@
 #define B   A1
 #define C   A2
 
+long t = 0;
+char field;
+
 // Last parameter = 'true' enables double-buffering, for flicker-free,
 // buttery smooth animation.  Note that NOTHING WILL SHOW ON THE DISPLAY
 // until the first call to swapBuffers().  This is normal.
@@ -41,6 +44,7 @@ void setup() {
   digitalWrite(BUTTON2, HIGH);
   pinMode(BUTTON3, INPUT);
   digitalWrite(BUTTON3, HIGH);
+
 }
 
 void loop() {
@@ -51,7 +55,9 @@ void loop() {
   if (game.winner == empty) {
     signed char move = getMove();
     if (move == ENTER_PRESSED) {
-      char field = insertChip(game.isPlayer1? player1: player2, &game.mainfield, game.col);
+      t = millis();
+      field = insertChip(game.isPlayer1? player1: player2, &game.mainfield, game.col);
+      renderTurn(&game, &matrix, t, field, game.isPlayer1? player1: player2);
       if(field != -1) {
         bool isWin = checkWin(&game.mainfield, field);
         if (isWin) {
@@ -77,6 +83,10 @@ void loop() {
   }
 
   render(&game, &matrix);
+
+  if(game.winner != empty) {
+    renderWin(&game, &matrix);
+  }
 
   // Update display
   matrix.swapBuffers(false);

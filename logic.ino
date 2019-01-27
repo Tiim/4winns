@@ -45,7 +45,7 @@ inline int getDown(int field) {
 inline int getDiagonalLeftDown(int field) {
   int col = getCol(field);
   if (col == 0) return -1; //check left edge
-  int n = field - (COLS +1);
+  int n = field - COLS -1;
   if (n < 0) return -1; //check bottom edge
   return n;
 }
@@ -53,15 +53,15 @@ inline int getDiagonalLeftDown(int field) {
 inline int getDiagonalLeftUp(int field) {
   int col = getCol(field);
   if (col == 0) return -1; //check left edge
-  int n = field + (COLS -1);
-  if (n <= FIELDS) return -1; //check top edge
+  int n = field + COLS -1;
+  if (n <= 0) return -1; //check top edge
   return n;
 }
 
 inline int getDiagonalRightDown(int field) {
   int col = getCol(field);
   if (col == COLS - 1) return -1; //check right edge
-  int n = field - (COLS -1);
+  int n = field -COLS +1;
   if (n < 0) return -1; //check bottom edge
   return n;
 }
@@ -69,15 +69,19 @@ inline int getDiagonalRightDown(int field) {
 inline int getDiagonalRightUp(int field) {
   int col = getCol(field);
   if (col == COLS - 1) return -1; //check right edge
-  int n = field + (COLS +1);
-  if (n <= FIELDS) return -1; //check top edge
+  int n = field + COLS +1;
+  if (n <= 0) return -1; //check top edge
   return n;
 }
+
+
 
 
 // returns true if current move was a win
 bool checkWin(struct gamefield* game, int lastCoin) {
   chip p = game->field[lastCoin];
+  int counter = 0;
+  game->winningChipPos[counter] = lastCoin;
   
   //check right side
   int x = 1;
@@ -85,37 +89,56 @@ bool checkWin(struct gamefield* game, int lastCoin) {
   for(int i = 0; i < WINNING_NR; i++) {
     current = getRight(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
+  
   //check left side
   current = lastCoin;
   for(int i = 0; i < WINNING_NR; i++) {
     current = getLeft(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   if (x >= WINNING_NR) return true;
   
   //check down
   x = 1;
+  counter = 0;
   current = lastCoin;
   for(int i = 0; i < WINNING_NR; i++) {
     current = getDown(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   if (x >= WINNING_NR) return true;
 
   //check diagonal right down
   x = 1;
+  counter = 0;
   current = lastCoin;
   for(int i = 0; i < WINNING_NR; i++) {
     current = getDiagonalRightDown(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   //check diagonal left up
@@ -123,18 +146,27 @@ bool checkWin(struct gamefield* game, int lastCoin) {
   for(int i = 0; i < WINNING_NR; i++) {
     current = getDiagonalLeftUp(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   if (x >= WINNING_NR) return true;
   
   //check diagonal left down
   x = 1;
+  counter = 0;
   current = lastCoin;
   for(int i = 0; i < WINNING_NR; i++) {
     current = getDiagonalLeftDown(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   //check diagonal right up
@@ -142,7 +174,11 @@ bool checkWin(struct gamefield* game, int lastCoin) {
   for(int i = 0; i < WINNING_NR; i++) {
     current = getDiagonalRightUp(current);
     if (current == -1) break;
-    if (game->field[current] == p) x++;
+    if (game->field[current] == p){ 
+      counter++;
+      game->winningChipPos[counter] = current;
+      x++;
+    }
     else break;
   }
   if (x >= WINNING_NR) return true;

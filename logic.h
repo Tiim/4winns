@@ -14,6 +14,7 @@ enum chip : unsigned char {
 
 struct gamefield {
     chip field[FIELDS];
+    signed char winningChipPos[4*sizeof(signed char)];
 };
 
 // calculates what happens if [player] inserts a coin in [collumn]

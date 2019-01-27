@@ -21,5 +21,7 @@
 #define COLOR_P2 BLUE
 
 void render(struct match4* game, RGBmatrixPanel* matrix);
+void renderTurn(struct match4* game, RGBmatrixPanel* matrix, long t, char pos, chip player);
+void renderWin(struct match4* game, RGBmatrixPanel* matrix);
 
 #endif
